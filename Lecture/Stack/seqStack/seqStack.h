@@ -1,5 +1,3 @@
-#include<iostream>
-
 class illegalSize{};
 class outOfBound{};
 
