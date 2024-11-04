@@ -1,3 +1,6 @@
+#ifndef LINKSTACK_H_INCLUDED
+#define LINKSTACK_H_INCLUDED
+
 class outOfBound{};
 
 template<typename elemType>
@@ -78,3 +81,5 @@ linkStack<elemType>::~linkStack() {
         delete tmp;
     }
 }
+
+#endif  \\ LINKSTACK_H_INCLUDED

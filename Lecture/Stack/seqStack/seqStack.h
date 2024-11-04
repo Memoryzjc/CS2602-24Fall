@@ -1,3 +1,6 @@
+#ifndef SEQSTACK_H_INCLUDED
+#define SEQSTACK_H_INCLUDED
+
 class illegalSize{};
 class outOfBound{};
 
@@ -81,3 +84,5 @@ void seqStack<elemType>::pop() {
 
     this->Top--;
 }
+
+#endif  // SEQSTACK_H_INCLUDED
