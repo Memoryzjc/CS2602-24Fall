@@ -1,5 +1,4 @@
-#ifndef SEQSTACK_H_INCLUDED
-#define SEQSTACK_H_INCLUDED
+#include<iostream>
 
 class illegalSize{};
 class outOfBound{};
@@ -29,7 +28,7 @@ private:
     };
 public:
     // initialize sequential stack
-    seqStack(int initSize = 100)
+    seqStack(int initSize = 1000)
     {
         this->array = new elemType[initSize];
         if (!array) {
@@ -87,4 +86,78 @@ public:
     };  
 };
 
-#endif  // SEQSTACK_H_INCLUDED
+bool isLegal(int nums[], int totalNum) {
+    seqStack<int> s;  // hold the number to be checked
+    int checkNum = 1;  // denote the correct number in every step
+    int outNum;  // denote the number out of s
+
+    if (totalNum == 1 && nums[0] != 1) {
+        return false;
+    }
+
+    s.push(nums[0]);  // push the first number into s
+    for (int i = 1; i < totalNum; i++) {
+        if (nums[i] > nums[i - 1]) {
+            // if nums[i] > nums[i - 1], pop all the element in s
+            // and check whether each element is equal to checkNum
+            while (!s.isEmpty()) {
+                outNum = s.top();
+                s.pop();
+
+                if (outNum != checkNum) {
+                    return false;
+                }
+
+                // add 1 to checkNum for next check
+                checkNum++;
+            }
+        }
+
+        s.push(nums[i]);
+    }
+
+    // Check remaining elements in stack
+    while (!s.isEmpty()) {
+        outNum = s.top();
+        s.pop();
+        if (outNum != checkNum) {
+            return false;
+        }
+
+        checkNum++;
+    }
+
+    return true;
+}
+
+int main() {
+    int T, totalNum;
+    std::cin >> T;
+    bool result[T];
+
+    for (int i = 0; i < T; i++) {
+        std::cin >> totalNum;
+        int nums[totalNum];
+
+        for (int j = 0; j < totalNum; j++) {
+            std::cin >> nums[j];
+        }
+
+        if (isLegal(nums, totalNum)) {
+            result[i] = true;
+        } else {
+            result[i] = false;
+        }
+
+    }
+
+    for (int i = 0; i < T; i++) {
+        if (result[i]) {
+            std::cout << "Yes" << std::endl;
+        } else {
+            std::cout << "No" << std::endl;
+        }
+    }
+
+    return 0;
+}
