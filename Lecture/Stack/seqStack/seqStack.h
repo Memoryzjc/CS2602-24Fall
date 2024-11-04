@@ -11,7 +11,8 @@ private:
     elemType *array;  // hold the data element
     int Top;  // denote the top of the stack
     int maxSize;  // the maximum number of the data stored in stack
-    void doubleSpace() { 
+    void doubleSpace() 
+    { 
         elemType *tmp = array;
         array = new elemType[2 * maxSize];
         
@@ -27,62 +28,63 @@ private:
         delete []tmp;
     };
 public:
-    seqStack(int initSize = 100);  // initialize sequential stack
+    // initialize sequential stack
+    seqStack(int initSize = 100)
+    {
+        this->array = new elemType[initSize];
+        if (!array) {
+            throw illegalSize();
+        }
+        this->Top = -1;
+        this->maxSize = initSize;
+    }
 
-    bool isEmpty() {
+    // if the stack is empty return true and false otherwise
+    bool isEmpty() 
+    {
         return Top == -1;
-    }  // if the stack is empty return true and false otherwise
+    }  
 
-    bool isFull() {
+    // if the stack is full return true and false otherwise
+    bool isFull() 
+    {
         return Top == maxSize - 1;
-    }  // if the stack is full return true and false otherwise
+    }  
     
-    elemType top();  // return the value of the top element and doesn't change the top of stack
+    // return the value of the top element and doesn't change the top of stack
+    elemType top() 
+    {
+        if (this->isEmpty()) {
+            throw outOfBound();
+        }
+        return this->array[this->Top];
+    }
     
-    void push(const elemType &e);  // push the element e into the stack
+    // push the element e into the stack
+    void push(const elemType &e)
+    {
+        if (this->isFull()) {
+            this->doubleSpace();
+        }
+        
+        this->array[++this->Top] = e;
+    } 
     
-    void pop();  // pop the element of the top of the stack
+    // pop the element of the top of the stack
+    void pop()
+    {
+        if (this->isEmpty()) {
+            throw illegalSize();
+        }
+
+        this->Top--;
+    }
     
-    ~seqStack() {
+    // free the dynamic array
+    ~seqStack() 
+    {
         delete []array;
-    };  // free the dynamic array
+    };  
 };
-
-template<typename elemType>
-seqStack<elemType>::seqStack(int initSize)
-{
-    this->array = new elemType[initSize];
-    if (!array) {
-        throw illegalSize();
-    }
-    this->Top = -1;
-    this->maxSize = initSize;
-}
-
-template<typename elemType>
-elemType seqStack<elemType>::top() {
-    if (this->isEmpty()) {
-        throw outOfBound();
-    }
-    return this->array[this->Top];
-}
-
-template<typename elemType>
-void seqStack<elemType>::push(const elemType &e) {
-    if (this->isFull()) {
-        this->doubleSpace();
-    }
-    
-    this->array[++this->Top] = e;
-}
-
-template<typename elemType>
-void seqStack<elemType>::pop() {
-    if (this->isEmpty()) {
-        throw illegalSize();
-    }
-
-    this->Top--;
-}
 
 #endif  // SEQSTACK_H_INCLUDED
