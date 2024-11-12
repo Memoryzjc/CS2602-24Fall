@@ -1,4 +1,5 @@
 #include<iostream>
+// #include<vector>
 
 class illegalSize{};
 class outOfBound{};
@@ -89,46 +90,37 @@ public:
 bool isLegal(int nums[], int totalNum) {
     seqStack<int> s;  // hold the number to be checked
     int checkNum = 1;  // denote the correct number in every step
-    int outNum;  // denote the number out of s
 
-    if (totalNum == 1 && nums[0] != 1) {
-        return false;
-    }
-
-    s.push(nums[0]);  // push the first number into s
-    for (int i = 1; i < totalNum; i++) {
-        if (nums[i] > nums[i - 1]) {
-            // if nums[i] > nums[i - 1], pop all the element in s
-            // and check whether each element is equal to checkNum
-            while (!s.isEmpty()) {
-                outNum = s.top();
-                s.pop();
-
-                if (outNum != checkNum) {
-                    return false;
-                }
-
-                // add 1 to checkNum for next check
-                checkNum++;
+    // Use stack to simulate the process of out of stack.
+    for (int i = 0; i < totalNum; i++) {
+        while (s.isEmpty() || s.top() != nums[i]) {
+            if (checkNum > totalNum) {
+                return false;
             }
+
+            s.push(checkNum);
+            checkNum++;
         }
-
-        s.push(nums[i]);
-    }
-
-    // Check remaining elements in stack
-    while (!s.isEmpty()) {
-        outNum = s.top();
         s.pop();
-        if (outNum != checkNum) {
-            return false;
-        }
-
-        checkNum++;
     }
 
     return true;
 }
+
+// bool is_valid_stack_sequence(int n, const vector<int>& sequence) {
+//     vector<int> stack;
+//     int next_push = 1;
+
+//     for (int num : sequence) {
+//         while (stack.empty() || stack.back() != num) {
+//             if (next_push > n) return false;
+//             stack.push_back(next_push++);
+//         }
+//         stack.pop_back();
+//     }
+
+//     return true;
+// }
 
 int main() {
     int T, totalNum;
