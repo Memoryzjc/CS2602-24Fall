@@ -105,7 +105,13 @@ private:
     // 按后序遍历输出以t为根的二叉树的结点的数据值
     void PostOrder(Node<elemType> *t)
     {
+        if (!t) {
+            return;
+        }
 
+        PostOrder(t->left);
+        PostOrder(t->right);
+        std::cout << t->data;
     }
 
 public:
@@ -217,28 +223,212 @@ public:
             if (p->left) {
                 s.push(p->left);
             }
+            std::cout << std::endl;
         }
 
-        std::cout << std::endl;
     }
 
     // 按中序遍历输出二叉树的结点的数据值(递归)
+    // void InOrder()
+    // {
+    //     this->InOrder(this->root);
+    // }
+
+    // in-order iteration
     void InOrder()
     {
-        this->InOrder(this->root);
+        // If root == nullptr, end iteration
+        if (this->root) {
+            return;
+        }
+
+        seqStack<Node<elemType>*> s;  // hold the nodes 
+        seqStack<int> flagStack;  // hold the flags of each corresponding node
+        Node<elemType> *p;
+        int flag;  // denote whether a node is pushed into s
+
+        // push root into s
+        s.push(this->root);
+        flagStack.push(0);
+
+        // main iteration
+        while (!s.isEmpty()) {
+            // check the top element and its flag
+            flag = flagStack.top();
+            flagStack.pop();
+
+            p = s.top();
+            if (flag == 1) {
+                // p already pushed into s, visit and pop p
+                s.pop();
+                std::cout << p->data;
+                // if p has right child, push it into s or continue otherwise
+                if (!p->right) {
+                    continue;
+                } else {
+                    s.push(p->right);
+                    s2.push(0);
+                }
+            } else {
+                // p not pushed into s, do not pop it and change its flag to 1
+                flagStack.push(1);
+
+                // if p has left child, push it into s and 0 into flagStack
+                if (p->left) {
+                    s.push(p->left);
+                    flagStack.push(0);
+                }
+            }
+            std::cout << std::endl;
+        }
+
     }
 
     // 按后序遍历输出二叉树的结点的数据值
-    void PostOrder()
-    {
+    // void PostOrder()
+    // {
+    //     return PostOrder(this->root);
+    // }
 
+    // Post-Order iteration
+    void PostOrder() 
+    {
+        if (!this->root) {
+            return;
+        }
+
+        seqStack<Node<elemType>*> nodeS;
+        seqStack<int> flagS;
+        Node<elemType> *p;
+        int flag;
+
+        // push root into node stack
+        nodeS.push(this->root);
+        flagS.push(0);
+
+        while (!nodeS.isEmpty()) {
+            flag = flagS.top();
+            flagS.pop();
+            p = nodeS.top();
+
+            switch (flag) {
+                case 0:
+                    // not poped out of node stack
+                    // if has left child, push its left child into node stack
+                    flagS.push(1);
+                    if (p->left) {
+                        nodeS.push(p->left);
+                        flagS.push(0);
+                    }
+                    break;
+                case 1:
+                    // poped out of s once
+                    // if has right child, push its right child into node stack
+                    flagS.push(2);
+                    if (p->right) {
+                        nodeS.push(p->right);
+                        flagS.push(0);
+                    }
+                    break;
+                case 2:
+                    // poped out of node stack twice
+                    /// pop and visit it
+                    nodeS.pop();
+                    std::cout << p->data;
+                    break;
+            }
+
+            std::cout << std::endl;
+        }
     }
 
     // 按层次遍历输出二叉树的结点的数据值
     void LevelOrder()
     {
+        if (!this->root) {
+            return;
+        }
 
+        seqQueue<Node<elemType>*> que;
+        Node<elemType> *p;
+
+        que.enQueue(this->root);
+
+        while(!que.isEmpty()) {
+            p = que.front();
+            que.deQueue();
+            std::cout << p->data;
+
+            if (p->left) {
+                que.enQueue(p->left);
+            }
+            if (p->right) {
+                que.enQueue(p->right);
+            }
+
+            std::cout << std::endl;
+        }
     }
+
+    /* 
+     * Use the series of pre and in order to build a tree
+     * parameter:
+     * pre[]: stores the preorder traversal sequence
+     * mid[]: stroes the inorder traversal sequence
+     * pl, pr: the left and right index of preorder sequence
+     * ml, mr: the left and right index of inorder sequence
+     * return:
+     * the root
+     */
+    Node<elemType>* buildTree(elemType pre[], int pl, int pr, elemType mid[], int ml, int mr)
+    {
+        Node<elemType> *p, *leftRoot, *rightRoot;
+        int i, pos, num;
+        // the left and right index of preorder and inorder 
+        // sequences in left child tree
+        int lpl, lpr, lml, lmr;  
+        // the left and right index of preorder and inorder 
+        // sequences in right child tree
+        int rpl, rpr, rml, rmr;
+
+        if (pl > pr) {
+            return nullptr;
+        }
+
+        p = new Node<elemType> (pre[pl]);  // find the root of child tree
+        if (!this->root) {
+            this->root = p;
+        }
+
+        // find the root position in mid[]
+        // and the number of nodes in left child tree
+        for (i = ml; i < mr; i++) {
+            if (min[i] == pre[pl]) {
+                break;
+            }
+        }
+        pos = i;  // the root index in mid[]
+        num = pos - ml;  // the number of nodes in left child tree
+
+        // find the range of left child tree node's index in pre[] and mid[]
+        lpl = pl + 1;
+        lpr = pl + num;
+        lml = ml;
+        lmr = pos - 1;
+        leftRoot = buildTree(pre, lpl, lpr, mid, lml, lmr);
+
+        // find the range of right child tree node's index in pre[] and mid[]
+        rpl = pl + num + 1;
+        rpr = pr;
+        rml = pos + 1;
+        rmr = mr;
+        rightRoot = buildTree(pre, rpl, rpr, mid, rml, rmr);
+
+        p->left = leftRoot;
+        p->right = rightRoot;
+        return p;
+    }
+
 };
 
 #endif // BTREE_H_INCLUDED
