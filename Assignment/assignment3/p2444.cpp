@@ -9,7 +9,7 @@ struct Node
     Node *right;
 };
 
-Node *buildTree(Node *t, int layer, int parent) {
+Node* buildTree(Node *t, int layer, int parent) {
     int data;
     std::cin >> data;
     t->data = data;
