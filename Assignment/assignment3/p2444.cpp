@@ -58,7 +58,7 @@ int main() {
     int deepth, data;
     std::cin >> n;
     
-    int nums[n][2];
+    int nums[10000][2];
 
     for (int i = 0; i < n; i++) {
         std::cin >> num1 >> num2;

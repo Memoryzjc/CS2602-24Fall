@@ -8,7 +8,7 @@
 template<typename elemType>
 class BTree;
 
-templaet<typename elemType>
+template<typename elemType>
 class Node
 {
 friend class BTree<elemType>;
