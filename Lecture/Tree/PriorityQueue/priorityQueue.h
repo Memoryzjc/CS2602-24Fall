@@ -159,4 +159,6 @@ public:
     {
         delete []array;
     }
-}
+};
+
+#endif //

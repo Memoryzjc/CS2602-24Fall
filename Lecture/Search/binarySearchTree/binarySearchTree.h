@@ -14,7 +14,8 @@ friend class binarySearchTree<elemType>;
 private:
     elemType data;
     Node *left, *right;
-    int factor;  // balance factor
+    // int factor;  // balance factor
+    int height;
 
 public:
     Node() : left(nullptr), right(nullptr) {}
@@ -95,6 +96,72 @@ private:
                 remove(p->data, t->right);
             }
         }
+    }
+
+    int height(Node<elemType> *t) const
+    {
+        return t == nullptr ? 0 : t->height;
+    }
+
+    void LL(Node<elemType> *&t)
+    {
+        Node<elemType> *t1 = t->left;  // final root
+        t->left = t1->right;
+        t1->right = t;
+
+        // modify height
+        t->height = (this->height(t->left) > this->height(t->right)) ? (this->height(t->left) + 1) : (this->height(t->right) + 1);
+        t1->height = (this->height(t1->left) > this->height(t)) ? (this->height(t1->left) + 1) : (this->height(t) + 1);
+
+        t = t1;
+    }
+
+    void LR(Node<elemType> *&t)
+    {
+
+    }
+
+    void RL(Node<elemType> *&t)
+    {
+
+    }
+
+    void RR(Node<elemType> *&t)
+    {
+
+    }
+
+    void insertAVL(const elemType &x, Node<elemType> *&t)
+    {
+        if (!t) {
+            t = new Node<elemType>(x);
+        } else if (x == t->data) {
+            return;
+        } else if (x < t->data) {
+            this->insertAVL(x, t->left);
+            // if t lose balance
+            if (this->height(t->left) - this->height(t->right) == 2) {
+                if (x < t->left->data) {
+                    this->LL(t);
+                } else {
+                    this->LR(t);
+                }
+            }
+        } else if (x > t->data) {
+            // insert at right child tree
+            this->insertAVL(x, t->right);
+            // if t lose balance
+            if (this->height(t->right) - this->height(t->left) == 2) {
+                if (t->right->data < x) {
+                    this->RR(t);
+                } else {
+                    this->RL(t);
+                }
+            }
+        }
+
+        // calculate height again
+        t->height = (this->height(t->left) > this->height(t->right)) ? this->height(t->left) + 1 : this->height(t->right) + 1;
     }
 
 public:
@@ -285,6 +352,11 @@ public:
                 que.enQueue(p->right);
             }
         }
+    }
+
+    void insertAVL(const elemType &x)
+    {
+        this->insertAVL(x, this->root);      
     }
 };
 
