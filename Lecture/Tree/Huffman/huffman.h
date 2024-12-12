@@ -13,7 +13,7 @@ struct HuffmanNode
 };
 
 /*
- * find the index of minimum value among all the nodes which parent is 0
+ * find the index of minimum value among all the nodes whose parent is 0
  */
 template<typename elemType>
 int minIndex(HuffmanNode<elemType> Bt[], int k, int m)
@@ -28,7 +28,7 @@ int minIndex(HuffmanNode<elemType> Bt[], int k, int m)
     }
 
     return min;
-}
+};
 
 template<typename elemType>
 HuffmanNode<elemType> *BestBinaryTree(elemType a[], double w[], int n)
@@ -65,7 +65,7 @@ HuffmanNode<elemType> *BestBinaryTree(elemType a[], double w[], int n)
     }
 
     return BBTree;
-}
+};
 
 // give the Huffman code of n nodes
 template<typename elemType>
@@ -119,6 +119,6 @@ char **HuffmanCode(HuffmanCode<elemType> BBTree[], int n)
     }
 
     return HFCode;
-}
+};
 
-#endif  // HUFFMAN_H_INCLUDED
+#endif // HUFFMAN_H_INCLUDED

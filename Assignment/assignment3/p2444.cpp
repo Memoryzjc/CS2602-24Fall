@@ -9,7 +9,7 @@ struct Node
     Node *right;
 };
 
-Node *buildTree(Node *t, int layer, int parent) {
+Node* buildTree(Node *t, int layer, int parent) {
     int data;
     std::cin >> data;
     t->data = data;
@@ -58,7 +58,7 @@ int main() {
     int deepth, data;
     std::cin >> n;
     
-    int nums[n][2];
+    int nums[10000][2];
 
     for (int i = 0; i < n; i++) {
         std::cin >> num1 >> num2;
