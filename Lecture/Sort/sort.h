@@ -103,7 +103,7 @@ private:
                 break;
             }
             a[hole] = a[i];
-            hole = j;
+            hole = i;
         }
         a[hole] = tmp;
 
